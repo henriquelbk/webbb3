@@ -13,12 +13,20 @@ export async function doLogin(){
     localStorage.setItem("wallet", accounts[0]);
 }
 
-export async function getCurrentVoting(){
+function getContract(){
     const wallet = localStorage.getItem("wallet");
     if(!wallet) throw new Error("Wallet not connected");
 
     const web3 = new Web3(window.ethereum);
-    const contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS, { from: wallet });
+    return new web3.eth.Contract(ABI, CONTRACT_ADDRESS, { from: wallet });
+}
 
+export async function getCurrentVoting(){
+    const contract = getContract();
     return contract.methods.getCurrentVoting().call();
+}
+
+export async function addVote(choice) {
+    const contract = getContract();
+    return contract.methods.addVote(choice).send();
 }
