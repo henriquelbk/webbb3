@@ -1,13 +1,24 @@
 "use client"
 
 import Head from "next/head";
-import Footer from "./components/Footer";
+import Footer from "../components/Footer";
+import { useState } from "react";
+import { doLogin } from "@/services/Web3Services";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
+  const { push } = useRouter(); 
+
+  const [message, setMessage] = useState(""); 
+
   function btnLoginClick(){
-    console.log("login");
-    
+    doLogin()
+      .then(account => push("/vote"))
+      .catch(err => {
+        console.error(err);
+        setMessage(err.message);
+      });      
   }
 
   return (
@@ -32,6 +43,7 @@ export default function Home() {
                 <img src="./metamask.png" width="64" className="me-3" />
                 Connect with Metamask
               </button>
+              <p className="message">{message}</p>
             </div>
           </div>
         </div>
