@@ -3,8 +3,7 @@
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import { useState, useEffect } from "react";
-import { doLogin } from "@/services/Web3Services";
-import { getCurrentVoting } from "@/services/Web3Services";
+import { getCurrentVoting, addVote } from "@/services/Web3Services";
 import { useRouter } from "next/navigation";
 
 
@@ -48,11 +47,29 @@ export default function Vote() {
   }
 
   function btnVote2Click(){
-    console.log("Vote 2");
+    setMessage("Connecting to wallet...");
+    addVote(2)
+     .then(() => {
+        setShowVotes(1);
+        setMessage("Partial results may change.");
+     })
+     .catch(err => {
+        console.log(err);
+        setMessage(err.message);
+     })
   }
 
   function btnVote1Click(){
-    console.log("Vote 1");
+    setMessage("Connecting to wallet...");
+    addVote(1)
+     .then(() => {
+        setShowVotes(1);
+        setMessage("Partial results may change.");
+     })
+     .catch(err => {
+        console.log(err);
+        setMessage(err.message);
+     })
   }
 
   return (
@@ -82,7 +99,7 @@ export default function Vote() {
                 {
                     showVotes > 0 || voting.maxDate < (Date.now() / 1000)
                     ? <button className="btn btn-secondary p-3 my-2 d-block mx-auto" style={{ width: 250 }} disabled={true}>{showVotes === 2 ? Number(voting.votes2) + 1: Number(voting.votes2)} votes</button>
-                    : <button className="btn btn-primary p-3 my-2 d-block mx-auto" style={{ width: 250 }} onClick={btnVote2Click()}>Vote out!</button>
+                    : <button className="btn btn-primary p-3 my-2 d-block mx-auto" style={{ width: 250 }} onClick={btnVote2Click}>Vote out!</button>
                 }
             </div>
             <div className="col-5">
@@ -92,7 +109,7 @@ export default function Vote() {
                 {
                     showVotes > 0 || voting.maxDate < (Date.now() / 1000)
                     ? <button className="btn btn-secondary p-3 my-2 d-block mx-auto" style={{ width: 250 }} disabled={true}>{showVotes === 1 ? Number(voting.votes1) + 1: Number(voting.votes1)} votes</button>
-                    : <button className="btn btn-primary p-3 my-2 d-block mx-auto" style={{ width: 250 }} onClick={btnVote1Click()}>Vote out!</button>
+                    : <button className="btn btn-primary p-3 my-2 d-block mx-auto" style={{ width: 250 }} onClick={btnVote1Click}>Vote out!</button>
                 }
             </div>
         </div>
